@@ -15,11 +15,18 @@ export class SignInUserHandler implements ICommandHandler<SignInUserCommand> {
   async execute(command: SignInUserCommand): Promise<string> {
     const { username, password } = command;
 
+    // ตรวจสอบ input
+    if (!username || !password) {
+      throw new UnauthorizedException('Username and password are required');
+    }
+
+    // ค้นหา user
     const user = await this.userRepository.findByUsername(username);
-    if (!user) {
+    if (!user || !user.password) {
       throw new UnauthorizedException('Invalid username or password');
     }
 
+    // ตรวจสอบรหัสผ่าน
     const passwordValid = await this.authService.comparePassword(
       password,
       user.password,

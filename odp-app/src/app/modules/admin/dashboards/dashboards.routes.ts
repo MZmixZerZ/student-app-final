@@ -1,13 +1,10 @@
-import { ActivatedRouteSnapshot, Router, RouterStateSnapshot, Routes } from '@angular/router';
+import { Routes } from '@angular/router';
 import { DashboardsComponent } from './dashboards.component';
-import { inject } from '@angular/core';
-import { catchError, throwError } from 'rxjs';
-import { DashboardsService } from './dashboards.services';
-
 
 export default [
     {
-        path     : '',
+        path: '',
         component: DashboardsComponent,
+        // สามารถเพิ่ม guard หรือ data เพิ่มเติมได้ที่นี่ถ้าต้องการ
     },
 ] as Routes;

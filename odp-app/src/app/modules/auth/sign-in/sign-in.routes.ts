@@ -5,5 +5,6 @@ export default [
     {
         path: '',
         component: AuthSignInComponent,
+        // สามารถเพิ่ม data หรือ guard เพิ่มเติมได้ที่นี่ถ้าต้องการ
     },
 ] as Routes;

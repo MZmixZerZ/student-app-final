@@ -1,4 +1,4 @@
-import { Body, Controller, Post } from '@nestjs/common';
+import { Body, Controller, Post, BadRequestException } from '@nestjs/common';
 import { CommandBus } from '@nestjs/cqrs';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { RegisterUserCommand } from './../../../auth/application/commands/register-user.command';
@@ -20,6 +20,10 @@ export class AuthController {
   async register(
     @Body() registerUserDto: RegisterUserDto,
   ): Promise<{ accessToken: string }> {
+    // ตรวจสอบ input
+    if (!registerUserDto.email || !registerUserDto.password) {
+      throw new BadRequestException('Email and password are required');
+    }
     const command = new RegisterUserCommand(registerUserDto);
     const accessToken = await this.commandBus.execute(command);
     return { accessToken };
@@ -29,6 +33,10 @@ export class AuthController {
   @ApiOperation({ summary: 'Sign in a user' })
   @ApiResponse({ status: 200, description: 'User successfully signed in' })
   async signin(@Body() signInDto: SignInDto): Promise<{ accessToken: string }> {
+    // ตรวจสอบ input
+    if (!signInDto.username || !signInDto.password) {
+      throw new BadRequestException('Username and password are required');
+    }
     const command = new SignInUserCommand(
       signInDto.username,
       signInDto.password,

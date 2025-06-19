@@ -105,9 +105,7 @@ export class AuthSignInComponent implements OnInit {
                 // to the correct page after a successful sign in. This way, that url can be set via
                 // routing file and we don't have to touch here.
                 const redirectURL =
-                    this._activatedRoute.snapshot.queryParamMap.get(
-                        'redirectURL'
-                    ) || '/signed-in-redirect';
+                    this._activatedRoute.snapshot.queryParamMap.get('redirectURL') || '/signed-in-redirect';
 
                 // Navigate to the redirect url
                 this._router.navigateByUrl(redirectURL);
@@ -122,12 +120,19 @@ export class AuthSignInComponent implements OnInit {
                 // Set the alert
                 this.alert = {
                     type: 'error',
-                    message: response.error.message || 'Something went wrong. Please try again.',
+                    message: response.error?.message || 'Something went wrong. Please try again.',
                 };
 
                 // Show the alert
                 this.showAlert = true;
             }
         );
+    }
+
+    /**
+     * Navigate to sign-up page
+     */
+    goToSignUp(): void {
+        this._router.navigate(['/sign-up']);
     }
 }

@@ -17,7 +17,6 @@ import { Router, RouterLink } from '@angular/router';
 import { fuseAnimations } from '@fuse/animations';
 import { FuseAlertComponent, FuseAlertType } from '@fuse/components/alert';
 import { AuthService } from 'app/core/auth/auth.service';
-import { user } from 'app/mock-api/common/user/data';
 
 @Component({
     selector: 'auth-sign-up',
@@ -71,8 +70,8 @@ export class AuthSignUpComponent implements OnInit {
             email: ['', [Validators.required, Validators.email]],
             username: [''],
             password: ['', Validators.required],
-            companyName: ['', Validators.required],
-            companyRegisterNo: ['', Validators.required],
+            companyName: [''],
+            companyRegisterNo: [''],
             agreements: ['', Validators.requiredTrue],
         });
     }
@@ -92,8 +91,6 @@ export class AuthSignUpComponent implements OnInit {
 
         // Disable the form
         this.signUpForm.disable();
-
-        // Hide the alert
         this.showAlert = false;
 
         // Set the username to the email
@@ -102,8 +99,14 @@ export class AuthSignUpComponent implements OnInit {
         // Sign up
         this._authService.signUp(this.signUpForm.value).subscribe({
             next: (response) => {
-                // Navigate to the confirmation required page
-                this._router.navigateByUrl('/companies');
+                // ถ้ามี accessToken ให้ set token และ authenticated
+                if (response && response.accessToken) {
+                    this._authService.accessToken = response.accessToken;
+                    // ถ้ามี public setter authenticated ให้ set ด้วย
+                    // this._authService.authenticated = true;
+                }
+                // สมัครเสร็จ redirect ไปหน้า dashboard ทันที
+                this._router.navigateByUrl('/dashboards');
             },
             error: (response) => {
                 // Re-enable the form
@@ -115,12 +118,19 @@ export class AuthSignUpComponent implements OnInit {
                 // Set the alert
                 this.alert = {
                     type: 'error',
-                    message: response.error.message || 'Something went wrong. Please try again.',
+                    message: response.error?.message || 'Something went wrong. Please try again.',
                 };
 
                 // Show the alert
                 this.showAlert = true;
-            }}
-        );
+            }
+        });
+    }
+
+    /**
+     * Navigate to sign-in page
+     */
+    goToSignIn(): void {
+        this._router.navigate(['/sign-in']);
     }
 }

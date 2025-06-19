@@ -25,14 +25,23 @@ export class AuthService {
         return localStorage.getItem('accessToken') ?? '';
     }
 
+    /**
+     * Setter & getter for authenticated flag
+     */
+    set authenticated(value: boolean) {
+        this._authenticated = value;
+    }
+
+    get authenticated(): boolean {
+        return this._authenticated;
+    }
+
     // -----------------------------------------------------------------------------------------------------
     // @ Public methods
     // -----------------------------------------------------------------------------------------------------
 
     /**
      * Forgot password
-     *
-     * @param email
      */
     forgotPassword(email: string): Observable<any> {
         return this._httpClient.post('api/auth/forgot-password', email);
@@ -40,8 +49,6 @@ export class AuthService {
 
     /**
      * Reset password
-     *
-     * @param password
      */
     resetPassword(password: string): Observable<any> {
         return this._httpClient.post('api/auth/reset-password', password);
@@ -49,13 +56,11 @@ export class AuthService {
 
     /**
      * Sign in
-     *
-     * @param credentials
      */
-    signIn(credentials: { email: string; password: string }): Observable<any> {
+    signIn(credentials: { username: string; password: string }): Observable<any> {
         // Throw error, if the user is already logged in
         if (this._authenticated) {
-            return throwError('User is already logged in.');
+            return throwError(() => new Error('User is already logged in.'));
         }
 
         return this._httpClient.post('api/auth/signin', credentials).pipe(
@@ -67,10 +72,7 @@ export class AuthService {
                 this._authenticated = true;
 
                 // Decode the access token and store it in the user service
-                const decodedToken = AuthUtils.decodeToken(
-                    response.accessToken
-                );
-                console.log(decodedToken);
+                const decodedToken = AuthUtils.decodeToken(response.accessToken);
                 // Store the user on the user service
                 this._userService.user = {
                     ...this._userService.user,
@@ -93,37 +95,20 @@ export class AuthService {
                 accessToken: this.accessToken,
             })
             .pipe(
-                catchError(() =>
-                    // Return false
-                    of(false)
-                ),
+                catchError(() => of(false)),
                 switchMap((response: any) => {
-                    // Replace the access token with the new one if it's available on
-                    // the response object.
-                    //
-                    // This is an added optional step for better security. Once you sign
-                    // in using the token, you should generate a new one on the server
-                    // side and attach it to the response object. Then the following
-                    // piece of code can replace the token with the refreshed one.
                     if (response.accessToken) {
                         this.accessToken = response.accessToken;
                     }
 
-                    // Set the authenticated flag to true
                     this._authenticated = true;
 
-                    // Decode the access token and store it in the user service
-                    const decodedToken = AuthUtils.decodeToken(
-                        response.accessToken
-                    );
-                    // console.log(decodedToken);
-                    // Store the user on the user service
+                    const decodedToken = AuthUtils.decodeToken(response.accessToken);
                     this._userService.user = {
                         ...this._userService.user,
                         ...decodedToken,
                     };
 
-                    // Return true
                     return of(true);
                 })
             );
@@ -133,48 +118,39 @@ export class AuthService {
      * Sign out
      */
     signOut(): Observable<any> {
-        // Remove the access token from the local storage
         localStorage.removeItem('accessToken');
-
-        // Set the authenticated flag to false
         this._authenticated = false;
-
-        // Return the observable
         return of(true);
     }
 
     /**
      * Sign up
-     *
-     * @param user
      */
     signUp(user: {
-        name: string;
+        fullName: string;
         email: string;
+        username?: string;
         password: string;
-        company: string;
+        companyName?: string;
+        companyRegisterNo?: string;
+        agreements?: boolean;
     }): Observable<any> {
+        // Set username = email (ถ้าไม่ได้ส่งมา)
+        if (!user.username) {
+            user.username = user.email;
+        }
         return this._httpClient.post('api/auth/signup', user).pipe(
             switchMap((response: any) => {
-                console.log(response);
-                // Store the access token in the local storage
-                this.accessToken = response.accessToken;
-
-                // Set the authenticated flag to true
-                this._authenticated = true;
-
-                // Decode the access token and store it in the user service
-                const decodedToken = AuthUtils.decodeToken(
-                    response.accessToken
-                );
-                console.log(decodedToken);
-                // Store the user on the user service
-                this._userService.user = {
-                    ...this._userService.user,
-                    ...decodedToken,
-                };
-
-                // Return a new observable with the response
+                // ถ้ามี accessToken ให้ set token และ authenticated
+                if (response && response.accessToken) {
+                    this.accessToken = response.accessToken;
+                    this._authenticated = true;
+                    const decodedToken = AuthUtils.decodeToken(response.accessToken);
+                    this._userService.user = {
+                        ...this._userService.user,
+                        ...decodedToken,
+                    };
+                }
                 return of(response);
             })
         );
@@ -182,13 +158,8 @@ export class AuthService {
 
     /**
      * Unlock session
-     *
-     * @param credentials
      */
-    unlockSession(credentials: {
-        email: string;
-        password: string;
-    }): Observable<any> {
+    unlockSession(credentials: { email: string; password: string }): Observable<any> {
         return this._httpClient.post('api/auth/unlock-session', credentials);
     }
 
@@ -196,22 +167,15 @@ export class AuthService {
      * Check the authentication status
      */
     check(): Observable<boolean> {
-        // Check if the user is logged in
         if (this._authenticated) {
             return of(true);
         }
-
-        // Check the access token availability
         if (!this.accessToken) {
             return of(false);
         }
-
-        // Check the access token expire date
         if (AuthUtils.isTokenExpired(this.accessToken)) {
             return of(false);
         }
-
-        // If the access token exists, and it didn't expire, sign in using it
         return this.signInUsingToken();
     }
 }

@@ -11,14 +11,10 @@
             </div>
 
             <!-- Title -->
-            <div
-                class="mt-8 text-4xl font-extrabold leading-tight tracking-tight"
-            >
-            เข้าสู่ระบบ
+            <div class="mt-8 text-4xl font-extrabold leading-tight tracking-tight">
+                เข้าสู่ระบบ
             </div>
-            
 
-            
             <!-- Alert -->
             @if (showAlert) {
                 <fuse-alert
@@ -39,12 +35,10 @@
                     <mat-label>อีเมล</mat-label>
                     <input id="username" matInput [formControlName]="'username'" />
                     @if (signInForm.get('username').hasError('required')) {
-                        <mat-error> กรุณาระบบ อีเมล </mat-error>
+                        <mat-error> กรุณาระบุ อีเมล </mat-error>
                     }
                     @if (signInForm.get('username').hasError('email')) {
-                        <mat-error>
-                            กรุณาระบบ อีเมล ให้ถูกต้อง
-                        </mat-error>
+                        <mat-error> กรุณาระบุอีเมลให้ถูกต้อง </mat-error>
                     }
                 </mat-form-field>
 
@@ -81,25 +75,22 @@
                             ></mat-icon>
                         }
                     </button>
-                    <mat-error> กรุณาระบบ รหัสผ่าน</mat-error>
+                    <mat-error> กรุณาระบุ รหัสผ่าน</mat-error>
                 </mat-form-field>
 
                 <!-- Actions -->
-                <div
-                    class="mt-1.5 inline-flex w-full items-center justify-between"
-                >
+                <div class="mt-1.5 inline-flex w-full items-center justify-between">
                     <mat-checkbox
                         class="-ml-2"
                         [color]="'primary'"
                         [formControlName]="'rememberMe'"
                     >
-                    จดจำฉันไว้ในระบบ
+                        จดจำฉันไว้ในระบบ
                     </mat-checkbox>
                     <a
                         class="text-md font-medium text-primary-500 hover:underline"
                         [routerLink]="['/forgot-password']"
-                        >ลืมรหัสผ่าน?
-                    </a>
+                    >ลืมรหัสผ่าน?</a>
                 </div>
 
                 <!-- Submit button -->
@@ -109,6 +100,7 @@
                     [color]="'primary'"
                     [disabled]="signInForm.disabled"
                     (click)="signIn()"
+                    type="button"
                 >
                     @if (!signInForm.disabled) {
                         <span> เข้าสู่ระบบ </span>
@@ -121,43 +113,18 @@
                     }
                 </button>
 
+                <!-- ลิงก์สมัครสมาชิก -->
+                <div class="mt-4 flex justify-center">
+                    <span>ยังไม่มีบัญชี?</span>
+                    <button
+                        type="button"
+                        class="ml-2 text-primary-500 hover:underline bg-transparent border-0 p-0 cursor-pointer"
+                        (click)="goToSignUp()"
+                    >
+                        สมัครสมาชิก
+                    </button>
+                </div>
             </form>
-        </div>
-    </div>
-    <div
-        class="relative hidden h-full w-1/2 flex-auto items-center justify-center overflow-hidden bg-gray-800 p-16 dark:border-l md:flex lg:px-28"
-    >
-        <!-- Background -->
-        <!-- Rings -->
-        <!-- prettier-ignore -->
-        <svg class="absolute inset-0 pointer-events-none"
-             viewBox="0 0 960 540" width="100%" height="100%" preserveAspectRatio="xMidYMax slice" xmlns="http://www.w3.org/2000/svg">
-            <g class="text-gray-700 opacity-25" fill="none" stroke="currentColor" stroke-width="100">
-                <circle r="234" cx="196" cy="23"></circle>
-                <circle r="234" cx="790" cy="491"></circle>
-            </g>
-        </svg>
-        <!-- Dots -->
-        <!-- prettier-ignore -->
-        <svg class="absolute -top-16 -right-16 text-gray-700"
-             viewBox="0 0 220 192" width="220" height="192" fill="none">
-            <defs>
-                <pattern id="837c3e70-6c3a-44e6-8854-cc48c737b659" x="0" y="0" width="20" height="20" patternUnits="userSpaceOnUse">
-                    <rect x="0" y="0" width="4" height="4" fill="currentColor"></rect>
-                </pattern>
-            </defs>
-            <rect width="220" height="192" fill="url(#837c3e70-6c3a-44e6-8854-cc48c737b659)"></rect>
-        </svg>
-        <!-- Content -->
-        <div class="relative z-10 w-full max-w-2xl">
-            <div class="text-7xl font-bold leading-none text-gray-100">
-                <div>ยินดีต้อนรับสู่</div>
-                <div>ระบบบริหารจัดการ</div>
-                <div>[System Name]</div>
-            </div>
-            <div class="mt-6 text-lg leading-6 tracking-tight text-gray-400">
-                แพลตฟอร์มของเราช่วยให้คุณสามารถ[System Objective] และเข้าถึงข้อมูลที่สำคัญของบริษัทได้อย่างสะดวกและปลอดภัย
-            </div>
         </div>
     </div>
 </div>

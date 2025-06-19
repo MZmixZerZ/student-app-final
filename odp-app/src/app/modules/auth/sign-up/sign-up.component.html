@@ -11,18 +11,15 @@
             </div>
 
             <!-- Title -->
-            <div
-                class="mt-8 text-4xl font-extrabold leading-tight tracking-tight"
-            >
-            สร้างบัญชีบริษัท
+            <div class="mt-8 text-4xl font-extrabold leading-tight tracking-tight">
+                สร้างบัญชีบริษัท
             </div>
             <div class="mt-0.5 flex items-baseline font-medium">
                 <div>มีบัญชีอยู่แล้ว?</div>
                 <a
                     class="ml-1 text-primary-500 hover:underline"
                     [routerLink]="['/sign-in']"
-                    >เข้าสู่ระบบ
-                </a>
+                >เข้าสู่ระบบ</a>
             </div>
 
             <!-- Alert -->
@@ -57,9 +54,7 @@
                         <mat-error> โปรดระบุ อีเมล </mat-error>
                     }
                     @if (signUpForm.get('email').hasError('email')) {
-                        <mat-error>
-                            โปรดระบุ อีเมลที่ถูกต้อง
-                        </mat-error>
+                        <mat-error> โปรดระบุ อีเมลที่ถูกต้อง </mat-error>
                     }
                 </mat-form-field>
 
@@ -107,9 +102,6 @@
                         matInput
                         [formControlName]="'companyName'"
                     />
-                    @if (signUpForm.get('companyName').hasError('required')) {
-                        <mat-error> โปรดระบุ ชื่อบริษัท/นิติบุคคล </mat-error>
-                    }
                 </mat-form-field>
 
                 <!-- Tax ID field -->
@@ -120,9 +112,6 @@
                         matInput
                         [formControlName]="'companyRegisterNo'"
                     />
-                    @if (signUpForm.get('companyRegisterNo').hasError('required')) {
-                        <mat-error> โปรดระบุ หมายเลขทะเบียนบริษัท </mat-error>
-                    }
                 </mat-form-field>
 
                 <!-- ToS and PP -->
@@ -136,14 +125,12 @@
                         <a
                             class="ml-1 text-primary-500 hover:underline"
                             [routerLink]="['./']"
-                            >เงื่อนไข
-                        </a>
+                        >เงื่อนไข</a>
                         <span>และ</span>
                         <a
                             class="ml-1 text-primary-500 hover:underline"
                             [routerLink]="['./']"
-                            >นโยบายความเป็นส่วนตัว
-                        </a>
+                        >นโยบายความเป็นส่วนตัว</a>
                     </mat-checkbox>
                 </div>
 
@@ -154,6 +141,7 @@
                     [color]="'primary'"
                     [disabled]="signUpForm.disabled"
                     (click)="signUp()"
+                    type="button"
                 >
                     @if (!signUpForm.disabled) {
                         <span> สร้างบัญชีบริษัท </span>
@@ -172,8 +160,6 @@
         class="relative hidden h-full w-1/2 flex-auto items-center justify-center overflow-hidden bg-gray-800 p-16 dark:border-l md:flex lg:px-28"
     >
         <!-- Background -->
-        <!-- Rings -->
-        <!-- prettier-ignore -->
         <svg class="absolute inset-0 pointer-events-none"
              viewBox="0 0 960 540" width="100%" height="100%" preserveAspectRatio="xMidYMax slice" xmlns="http://www.w3.org/2000/svg">
             <g class="text-gray-700 opacity-25" fill="none" stroke="currentColor" stroke-width="100">
@@ -181,8 +167,6 @@
                 <circle r="234" cx="790" cy="491"></circle>
             </g>
         </svg>
-        <!-- Dots -->
-        <!-- prettier-ignore -->
         <svg class="absolute -top-16 -right-16 text-gray-700"
              viewBox="0 0 220 192" width="220" height="192" fill="none">
             <defs>
@@ -192,7 +176,6 @@
             </defs>
             <rect width="220" height="192" fill="url(#837c3e70-6c3a-44e6-8854-cc48c737b659)"></rect>
         </svg>
-        <!-- Content -->
         <div class="relative z-10 w-full max-w-2xl">
             <div class="text-7xl font-bold leading-none text-gray-100">
                 <div>ยินดีต้อนรับสู่</div>

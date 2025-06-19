@@ -15,6 +15,10 @@ export class AuthService {
     password: string,
     hashedPassword: string,
   ): Promise<boolean> {
+    // ป้องกัน error: data and hash arguments required
+    if (!password || !hashedPassword) {
+      return false;
+    }
     return bcrypt.compare(password, hashedPassword);
   }
 
