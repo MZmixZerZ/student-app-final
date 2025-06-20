@@ -7,6 +7,9 @@ export interface UserRepositoryInterface {
   // ค้นหาผู้ใช้โดยใช้ username หรือ email
   findByUsername(username: string): Promise<UserEntity | null>;
 
+  // ค้นหาผู้ใช้โดยใช้ email
+  findByEmail(email: string): Promise<UserEntity | null>; // เพิ่มใน interface
+
   // อัปเดตข้อมูลของผู้ใช้
   update(user: UserEntity): Promise<UserEntity>;
 

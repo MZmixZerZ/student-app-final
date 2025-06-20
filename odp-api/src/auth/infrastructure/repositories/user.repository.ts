@@ -20,6 +20,11 @@ export class UserRepository implements UserRepositoryInterface {
     return user ? this.mapToEntity(user) : null;
   }
 
+  async findByEmail(email: string): Promise<UserEntity | null> {
+    const user = await this.userModel.findOne({ email: email });
+    return user ? this.mapToEntity(user) : null;
+  }
+
   // ฟังก์ชันสำหรับนับจำนวนผู้ใช้ทั้งหมด
   async count(): Promise<number> {
     return this.userModel.countDocuments();

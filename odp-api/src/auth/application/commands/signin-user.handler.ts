@@ -13,17 +13,21 @@ export class SignInUserHandler implements ICommandHandler<SignInUserCommand> {
   ) {}
 
   async execute(command: SignInUserCommand): Promise<string> {
-    const { username, password } = command;
+    const { usernameOrEmail, password } = command;
 
     // ตรวจสอบ input
-    if (!username || !password) {
-      throw new UnauthorizedException('Username and password are required');
+    if (!usernameOrEmail || !password) {
+      throw new UnauthorizedException('Username or email and password are required');
     }
 
-    // ค้นหา user
-    const user = await this.userRepository.findByUsername(username);
+    // ค้นหา user ด้วย username หรือ email
+    let user = await this.userRepository.findByUsername(usernameOrEmail);
+    if (!user && this.userRepository.findByEmail) {
+      user = await this.userRepository.findByEmail(usernameOrEmail);
+    }
+
     if (!user || !user.password) {
-      throw new UnauthorizedException('Invalid username or password');
+      throw new UnauthorizedException('Invalid username/email or password');
     }
 
     // ตรวจสอบรหัสผ่าน
@@ -32,7 +36,7 @@ export class SignInUserHandler implements ICommandHandler<SignInUserCommand> {
       user.password,
     );
     if (!passwordValid) {
-      throw new UnauthorizedException('Invalid username or password');
+      throw new UnauthorizedException('Invalid username/email or password');
     }
 
     return this.authService.generateJwtToken(user);

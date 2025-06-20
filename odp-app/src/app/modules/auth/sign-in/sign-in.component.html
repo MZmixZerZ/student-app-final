@@ -33,11 +33,11 @@
                 <!-- Username field -->
                 <mat-form-field class="w-full">
                     <mat-label>อีเมล</mat-label>
-                    <input id="username" matInput [formControlName]="'username'" />
-                    @if (signInForm.get('username').hasError('required')) {
+                    <input id="email" matInput [formControlName]="'email'" />
+                    @if (signInForm.get('email').hasError('required')) {
                         <mat-error> กรุณาระบุ อีเมล </mat-error>
                     }
-                    @if (signInForm.get('username').hasError('email')) {
+                    @if (signInForm.get('email').hasError('email')) {
                         <mat-error> กรุณาระบุอีเมลให้ถูกต้อง </mat-error>
                     }
                 </mat-form-field>
@@ -128,3 +128,5 @@
         </div>
     </div>
 </div>
+
+

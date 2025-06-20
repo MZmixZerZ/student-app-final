@@ -67,7 +67,7 @@ export class AuthSignInComponent implements OnInit {
     ngOnInit(): void {
         // Create the form
         this.signInForm = this._formBuilder.group({
-            username: [
+            email: [
                 '',
                 [Validators.required, Validators.email],
             ],
@@ -97,33 +97,26 @@ export class AuthSignInComponent implements OnInit {
 
         const { rememberMe, ...data } = this.signInForm.value;
 
+        // Map email to usernameOrEmail (ให้ตรงกับ backend)
+        const payload = {
+            username: data.email, // เปลี่ยนจาก usernameOrEmail เป็น username
+            password: data.password
+        };
+
         // Sign in
-        this._authService.signIn(data).subscribe(
+        this._authService.signIn(payload).subscribe(
             () => {
-                // Set the redirect url.
-                // The '/signed-in-redirect' is a dummy url to catch the request and redirect the user
-                // to the correct page after a successful sign in. This way, that url can be set via
-                // routing file and we don't have to touch here.
                 const redirectURL =
                     this._activatedRoute.snapshot.queryParamMap.get('redirectURL') || '/signed-in-redirect';
-
-                // Navigate to the redirect url
                 this._router.navigateByUrl(redirectURL);
             },
             (response) => {
-                // Re-enable the form
                 this.signInForm.enable();
-
-                // Reset the form
                 this.signInNgForm.resetForm();
-
-                // Set the alert
                 this.alert = {
                     type: 'error',
-                    message: response.error?.message || 'Something went wrong. Please try again.',
+                    message: response.error?.message || 'Invalid email or password.',
                 };
-
-                // Show the alert
                 this.showAlert = true;
             }
         );

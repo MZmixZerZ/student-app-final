@@ -59,11 +59,6 @@ export class AuthService {
      * Sign in
      */
     signIn(credentials: { username: string; password: string }): Observable<any> {
-        // Throw error, if the user is already logged in
-        if (this._authenticated) {
-            return throwError(() => new Error('User is already logged in.'));
-        }
-
         return this._httpClient.post(`${environment.apiUrl}/auth/signin`, credentials).pipe(
             switchMap((response: any) => {
                 // Store the access token in the local storage

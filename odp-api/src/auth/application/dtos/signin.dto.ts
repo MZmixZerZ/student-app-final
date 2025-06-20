@@ -4,9 +4,9 @@ import { IsString, IsNotEmpty, MinLength, MaxLength } from 'class-validator';
 export class SignInDto {
   @ApiProperty({ description: 'Username or email of the user' })
   @IsString()
-  @IsNotEmpty({ message: 'Username is required' })
+  @IsNotEmpty({ message: 'Username or email is required' })
   @MinLength(3)
-  username: string;
+  username: string; // ใช้สำหรับรับ username หรือ email
 
   @ApiProperty({ description: 'Password of the user' })
   @IsString()

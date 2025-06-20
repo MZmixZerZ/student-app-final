@@ -30,10 +30,10 @@ export class AuthController {
   @ApiResponse({ status: 200, description: 'User successfully signed in' })
   async signin(@Body() signInDto: SignInDto): Promise<{ accessToken: string }> {
     if (!signInDto.username || !signInDto.password) {
-      throw new BadRequestException('Username and password are required');
+      throw new BadRequestException('Username (or email) and password are required');
     }
     const command = new SignInUserCommand(
-      signInDto.username,
+      signInDto.username, // username หรือ email
       signInDto.password,
     );
     const accessToken = await this.commandBus.execute(command);
