@@ -3,6 +3,7 @@ import { inject, Injectable } from '@angular/core';
 import { AuthUtils } from 'app/core/auth/auth.utils';
 import { UserService } from 'app/core/user/user.service';
 import { catchError, Observable, of, switchMap, throwError } from 'rxjs';
+import { environment } from '../../../environments/environment';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
@@ -44,14 +45,14 @@ export class AuthService {
      * Forgot password
      */
     forgotPassword(email: string): Observable<any> {
-        return this._httpClient.post('api/auth/forgot-password', email);
+        return this._httpClient.post(`${environment.apiUrl}/auth/forgot-password`, email);
     }
 
     /**
      * Reset password
      */
     resetPassword(password: string): Observable<any> {
-        return this._httpClient.post('api/auth/reset-password', password);
+        return this._httpClient.post(`${environment.apiUrl}/auth/reset-password`, password);
     }
 
     /**
@@ -63,7 +64,7 @@ export class AuthService {
             return throwError(() => new Error('User is already logged in.'));
         }
 
-        return this._httpClient.post('api/auth/signin', credentials).pipe(
+        return this._httpClient.post(`${environment.apiUrl}/auth/signin`, credentials).pipe(
             switchMap((response: any) => {
                 // Store the access token in the local storage
                 this.accessToken = response.accessToken;
@@ -91,7 +92,7 @@ export class AuthService {
     signInUsingToken(): Observable<any> {
         // Sign in using the token
         return this._httpClient
-            .post('api/auth/sign-in-with-token', {
+            .post(`${environment.apiUrl}/auth/sign-in-with-token`, {
                 accessToken: this.accessToken,
             })
             .pipe(
@@ -139,7 +140,7 @@ export class AuthService {
         if (!user.username) {
             user.username = user.email;
         }
-        return this._httpClient.post('api/auth/signup', user).pipe(
+        return this._httpClient.post(`${environment.apiUrl}/auth/signup`, user).pipe(
             switchMap((response: any) => {
                 // ถ้ามี accessToken ให้ set token และ authenticated
                 if (response && response.accessToken) {
@@ -160,7 +161,7 @@ export class AuthService {
      * Unlock session
      */
     unlockSession(credentials: { email: string; password: string }): Observable<any> {
-        return this._httpClient.post('api/auth/unlock-session', credentials);
+        return this._httpClient.post(`${environment.apiUrl}/auth/unlock-session`, credentials);
     }
 
     /**
