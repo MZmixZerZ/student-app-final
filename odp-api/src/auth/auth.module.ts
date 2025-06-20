@@ -34,7 +34,7 @@ dotenv.config(); // โหลดตัวแปรจากไฟล์ .env ก
       { name: 'Company', schema: CompanySchema },
     ]),
     JwtModule.register({
-      secret: process.env.JWT_SECRET,
+      secret: process.env.JWT_SECRET || 'defaultSecret',
       signOptions: { expiresIn: '1h' },
     }),
   ],

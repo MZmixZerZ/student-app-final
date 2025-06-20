@@ -8,7 +8,7 @@ import { AccessLogService } from './common/infrastructure/services/access-log.se
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   const accessLogService = app.get(AccessLogService);
-  app.useGlobalInterceptors(new AccessLogInterceptor(accessLogService)); // ตั้งค่า Interceptor แบบ global
+  app.useGlobalInterceptors(new AccessLogInterceptor(accessLogService));
 
   // ตั้งค่า Global Prefix
   const globalPrefix = 'api';
@@ -17,9 +17,9 @@ async function bootstrap() {
   // ตั้งค่า Validation Pipe แบบ global
   app.useGlobalPipes(
     new ValidationPipe({
-      whitelist: true, // ลบคีย์ที่ไม่ถูกต้องออกจาก DTO
-      forbidNonWhitelisted: false, // ถ้ามีคีย์ที่ไม่ถูกต้อง ให้แสดงข้อผิดพลาด
-      transform: true, // แปลงข้อมูลเป็นประเภทที่กำหนดใน DTO
+      whitelist: true,
+      forbidNonWhitelisted: false,
+      transform: true,
     }),
   );
 
@@ -28,10 +28,19 @@ async function bootstrap() {
     .setTitle('BE Service API')
     .setDescription('API documentation for the BE service')
     .setVersion('1.0')
-    .addBearerAuth() // สำหรับใช้ JWT ในการยืนยันตัวตน
+    .addBearerAuth()
     .build();
   const document = SwaggerModule.createDocument(app, config);
-  SwaggerModule.setup('api', app, document);
+  SwaggerModule.setup(globalPrefix, app, document);
+
+  // ตั้งค่า CORS ให้รองรับทั้ง local และ production
+  app.enableCors({
+    origin: [
+      'https://student-app-3vt7.onrender.com',
+      'http://localhost:4200'
+    ],
+    credentials: true,
+  });
 
   await app.listen(3001);
 }

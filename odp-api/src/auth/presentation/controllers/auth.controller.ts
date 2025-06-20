@@ -7,10 +7,7 @@ import { RegisterUserDto } from './../../../auth/application/dtos/register-user.
 import { SignInDto } from './../../../auth/application/dtos/signin.dto';
 
 @ApiTags('auth')
-@Controller({
-  path: 'auth',
-  version: '1',
-})
+@Controller('auth')
 export class AuthController {
   constructor(private readonly commandBus: CommandBus) {}
 
@@ -20,7 +17,6 @@ export class AuthController {
   async register(
     @Body() registerUserDto: RegisterUserDto,
   ): Promise<{ accessToken: string }> {
-    // ตรวจสอบ input
     if (!registerUserDto.email || !registerUserDto.password) {
       throw new BadRequestException('Email and password are required');
     }
@@ -33,7 +29,6 @@ export class AuthController {
   @ApiOperation({ summary: 'Sign in a user' })
   @ApiResponse({ status: 200, description: 'User successfully signed in' })
   async signin(@Body() signInDto: SignInDto): Promise<{ accessToken: string }> {
-    // ตรวจสอบ input
     if (!signInDto.username || !signInDto.password) {
       throw new BadRequestException('Username and password are required');
     }

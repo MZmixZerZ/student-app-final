@@ -2,11 +2,12 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, map, Observable, tap } from 'rxjs';
 import { Company } from './companies.types';
+import { environment } from '../../../environments/environment';
 
 
 @Injectable({ providedIn: 'root' })
 export class CompaniesService {
-    private _baseUserUrl = '/api/companies';
+    private _baseUserUrl = `${environment.apiUrl}/companies`;
 
     readonly apiUrl = {
         userUrl: this._baseUserUrl,
